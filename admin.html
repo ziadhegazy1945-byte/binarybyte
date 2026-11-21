@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>BinaryByte Portfolio Manager</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Sora:wght@500;600;700&display=swap">
+<style>
+:root { --ink:#050b1a; --navy:#0a1530; --panel:#0e1d42; --electric:#2f7bff; --baby:#9fd0ff; --text:#e8efff; --muted:#98a6c4; --line:rgba(159,208,255,.16); --ok:#6fe0b0; --warn:#ffcf70; --bad:#ff9aa5; color-scheme: dark; }
+* { box-sizing: border-box; }
+html { background: var(--ink); }
+body { margin: 0; background: var(--ink); color: var(--text); font: 400 15.5px/1.6 "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+h1, h2, h3 { font-family: "Sora", system-ui, sans-serif; margin: 0; letter-spacing: -.02em; line-height: 1.15; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--baby); outline-offset: 3px; border-radius: 6px; }
+.top { max-width: 1100px; margin: 0 auto; padding-block: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.brand { font: 700 18px "Sora", sans-serif; text-decoration: none; }
+.brand b { color: var(--baby); }
+.back { color: var(--muted); text-decoration: none; font-size: 14px; }
+.back:hover { color: var(--baby); }
+.page { max-width: 1100px; margin: 0 auto; padding-top: 34px; display: grid; gap: 28px; }
+.intro h1 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); }
+.intro p { color: var(--muted); max-width: 70ch; margin-top: 10px; }
+.steps { margin: 14px 0 0; padding-left: 20px; color: var(--muted); }
+.steps li { margin: 4px 0; }
+.steps b { color: var(--text); font-weight: 600; }
+.cols { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: start; }
+.panel { background: linear-gradient(160deg, rgba(14,29,66,.8), rgba(10,21,48,.6)); border: 1px solid var(--line); border-radius: 20px; padding: clamp(18px, 3vw, 28px); min-width: 0; }
+.panel h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.field { display: grid; gap: 6px; margin-bottom: 14px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 110px; gap: 12px; }
+label { font-size: 13px; font-weight: 600; }
+label em { font-style: normal; font-weight: 400; color: var(--muted); }
+input[type=text], input[type=url], textarea { width: 100%; font: 400 15.5px "Manrope", sans-serif; color: var(--text); background: rgba(5,11,26,.65); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+input::placeholder, textarea::placeholder { color: #5f6f94; }
+input:focus, textarea:focus { outline: none; border-color: var(--electric); box-shadow: 0 0 0 4px rgba(47,123,255,.2); }
+.bad input, .bad textarea { border-color: var(--bad); }
+.err { color: var(--bad); font-size: 13px; }
+.hint { color: var(--muted); font-size: 13px; }
+.imgbox { display: grid; grid-template-columns: 120px 1fr; gap: 14px; align-items: center; }
+.thumb { aspect-ratio: 16/10; border-radius: 10px; border: 1px dashed var(--line); background: rgba(5,11,26,.5) center/cover no-repeat; display: grid; place-items: center; color: var(--muted); font-size: 12px; text-align: center; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 18px; border-radius: 999px; font: 600 14px "Manrope", sans-serif; border: 1px solid var(--line); background: rgba(159,208,255,.05); color: var(--text); cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.btn:hover { border-color: var(--baby); background: rgba(159,208,255,.12); }
+.btn.primary { background: linear-gradient(135deg, #3b86ff, #1f5de0); border-color: transparent; }
+.btn.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(47,123,255,.4); }
+.btn.sm { padding: 7px 13px; font-size: 13px; }
+.btn.danger { color: var(--bad); }
+.btn.danger.confirm { background: rgba(255,154,165,.15); border-color: var(--bad); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.list { display: grid; gap: 12px; }
+.item { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: rgba(5,11,26,.4); min-width: 0; }
+.item .thumb { border-style: solid; }
+.item h3 { font-size: 1rem; overflow-wrap: anywhere; }
+.item .meta { color: var(--muted); font-size: 13px; margin-top: 2px; overflow-wrap: anywhere; }
+.item .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.empty { color: var(--muted); padding: 22px; border: 1px dashed var(--line); border-radius: 14px; text-align: center; }
+.publish { display: grid; gap: 14px; }
+.status { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.status.dirty { color: var(--warn); }
+.status.dirty i { background: var(--warn); }
+details { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+textarea.json { margin-top: 12px; min-height: 180px; font: 400 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; }
+.note { color: var(--muted); font-size: 13.5px; }
+.toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); background: var(--panel); border: 1px solid var(--baby); color: var(--text); padding: 11px 18px; border-radius: 999px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; max-width: calc(100% - 32px); text-align: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .imgbox { grid-template-columns: 1fr; } .row2 { grid-template-columns: 1fr 90px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">Binary<b>Byte</b> <span style="font-weight:500;color:var(--muted)">/ Portfolio Manager</span></a>
+  <a class="back" href="index.html#work">&larr; Back to website</a>
+</header>
+
+<main class="page">
+  <section class="intro">
+    <h1>Manage your work</h1>
+    <p>Add, edit and reorder the projects shown in the Work section of your website. Changes are saved in this browser as a draft until you publish them.</p>
+    <ol class="steps">
+      <li><b>Add or edit</b> your projects below.</li>
+      <li>Click <b>Download projects.json</b> in the Publish panel.</li>
+      <li>Replace the <b>projects.json</b> file in your website folder with the downloaded one, then deploy again.</li>
+    </ol>
+  </section>
+
+  <div class="cols">
+    <section class="panel" aria-labelledby="formTitle">
+      <h2 id="formTitle">Add a project</h2>
+      <form id="pform" novalidate>
+        <div class="field" id="f-title"><label for="title">Project title</label><input id="title" type="text" maxlength="80" placeholder="e.g. Customer portal for a logistics company"><small class="err" id="e-title" role="alert"></small></div>
+        <div class="row2">
+          <div class="field"><label for="category">Category</label><input id="category" type="text" maxlength="40" placeholder="Web app, Mobile app, E-commerce..."></div>
+          <div class="field"><label for="year">Year</label><input id="year" type="text" maxlength="4" inputmode="numeric" placeholder="2026"></div>
+        </div>
+        <div class="field"><label for="desc">Description <em>(optional)</em></label><textarea id="desc" rows="3" maxlength="240" placeholder="One or two sentences about the goal and the result."></textarea></div>
+        <div class="field" id="f-link"><label for="link">Project link <em>(optional)</em></label><input id="link" type="url" placeholder="https://example.com"><small class="err" id="e-link" role="alert"></small></div>
+        <div class="field">
+          <label for="file">Cover image <em>(optional)</em></label>
+          <div class="imgbox">
+            <div class="thumb" id="thumb">No image</div>
+            <div>
+              <input id="file" type="file" accept="image/png,image/jpeg,image/webp">
+              <p class="hint" style="margin:6px 0 0">Images are resized automatically. Or paste an image address:</p>
+            </div>
+          </div>
+          <input id="imgurl" type="url" placeholder="https://.../cover.jpg" style="margin-top:6px">
+          <small class="err" id="e-img" role="alert"></small>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit" id="saveBtn">Add project</button>
+          <button class="btn" type="button" id="cancelBtn" hidden>Cancel editing</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="listTitle">
+      <h2 id="listTitle">Your projects <span id="count" style="color:var(--muted);font-weight:500"></span></h2>
+      <div class="list" id="list"></div>
+    </section>
+  </div>
+
+  <section class="panel publish" aria-labelledby="pubTitle">
+    <h2 id="pubTitle" style="margin:0">Publish</h2>
+    <p class="status" id="status"><i></i><span>Matches the published site</span></p>
+    <div class="actions" style="margin:0">
+      <button class="btn primary" type="button" id="dlBtn">Download projects.json</button>
+      <button class="btn" type="button" id="copyBtn">Copy JSON</button>
+      <button class="btn" type="button" id="resetBtn">Discard draft</button>
+    </div>
+    <p class="note">This page prepares the file. Your live website updates only after you replace <b>projects.json</b> and deploy, so visitors never see unfinished changes.</p>
+    <details>
+      <summary>Show JSON</summary>
+      <textarea class="json" id="json" readonly aria-label="projects.json contents"></textarea>
+    </details>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var KEY = 'binarybyte-projects-draft';
+  var projects = [], published = '[]', editingId = null, image = '', armed = null;
+
+  function store(v) { try { if (v === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, v); } catch (e) {} }
+  function load() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function uid() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function toast(m) { var t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove('show'); }, 2200); }
+  function jsonText() { return JSON.stringify({ projects: projects }, null, 2) + '\n'; }
+  function safe(u, img) {
+    u = String(u || '').trim();
+    if (/^https?:\/\//i.test(u)) return u;
+    if (img && /^data:image\/(jpeg|png|webp);base64,/i.test(u)) return u;
+    return '';
+  }
+
+  function persist() {
+    store(JSON.stringify(projects));
+    render();
+  }
+
+  function render() {
+    var list = $('list'); list.textContent = '';
+    $('count').textContent = projects.length ? '(' + projects.length + ')' : '';
+    if (!projects.length) {
+      var e = document.createElement('div'); e.className = 'empty';
+      e.textContent = 'No projects yet. Add your first project using the form.';
+      list.appendChild(e);
+    }
+    projects.forEach(function (p, i) {
+      var it = document.createElement('div'); it.className = 'item';
+      var th = document.createElement('div'); th.className = 'thumb';
+      var src = safe(p.image, true);
+      if (src) { th.style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")'; } else { th.textContent = 'No image'; }
+      var body = document.createElement('div');
+      var h = document.createElement('h3'); h.textContent = p.title;
+      var m = document.createElement('div'); m.className = 'meta'; m.textContent = [p.category, p.year].filter(Boolean).join(' · ') || ' ';
+      var b = document.createElement('div'); b.className = 'btns';
+      function btn(label, fn, cls) { var x = document.createElement('button'); x.type = 'button'; x.className = 'btn sm' + (cls ? ' ' + cls : ''); x.textContent = label; x.addEventListener('click', fn); b.appendChild(x); return x; }
+      btn('Edit', function () { startEdit(p.id); });
+      if (i > 0) btn('Move up', function () { move(i, -1); });
+      if (i < projects.length - 1) btn('Move down', function () { move(i, 1); });
+      var del = btn(armed === p.id ? 'Confirm delete' : 'Delete', function () {
+        if (armed === p.id) { projects = projects.filter(function (q) { return q.id !== p.id; }); armed = null; if (editingId === p.id) resetForm(); persist(); toast('Project deleted'); }
+        else { armed = p.id; render(); }
+      }, 'danger' + (armed === p.id ? ' confirm' : ''));
+      body.appendChild(h); body.appendChild(m); body.appendChild(b);
+      it.appendChild(th); it.appendChild(body); list.appendChild(it);
+    });
+    var txt = jsonText();
+    $('json').value = txt;
+    var dirty = txt !== published;
+    var st = $('status'); st.className = 'status' + (dirty ? ' dirty' : '');
+    st.lastChild.textContent = dirty ? 'Unpublished changes. Download projects.json and deploy.' : 'Matches the published site';
+  }
+
+  function move(i, d) { var j = i + d; var t = projects[i]; projects[i] = projects[j]; projects[j] = t; persist(); }
+
+  function setThumb() {
+    var t = $('thumb'); var s = safe(image, true);
+    if (s) { t.style.backgroundImage = 'url("' + s.replace(/"/g, '%22') + '")'; t.textContent = ''; }
+    else { t.style.backgroundImage = ''; t.textContent = 'No image'; }
+  }
+  function resetForm() {
+    editingId = null; image = '';
+    $('pform').reset(); setThumb();
+    $('formTitle').textContent = 'Add a project'; $('saveBtn').textContent = 'Add project'; $('cancelBtn').hidden = true;
+    ['title', 'link'].forEach(function (k) { $('f-' + k).classList.remove('bad'); $('e-' + k).textContent = ''; });
+    $('e-img').textContent = '';
+  }
+  function startEdit(id) {
+    var p = projects.filter(function (q) { return q.id === id; })[0]; if (!p) return;
+    editingId = id; image = p.image || '';
+    $('title').value = p.title || ''; $('category').value = p.category || ''; $('year').value = p.year || '';
+    $('desc').value = p.description || ''; $('link').value = p.link || '';
+    $('imgurl').value = /^https?:/i.test(image) ? image : '';
+    setThumb();
+    $('formTitle').textContent = 'Edit project'; $('saveBtn').textContent = 'Save changes'; $('cancelBtn').hidden = false;
+    $('title').focus(); $('pform').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function resize(file) {
+    return new Promise(function (res, rej) {
+      var url = URL.createObjectURL(file), im = new Image();
+      im.onload = function () {
+        var max = 1200, s = Math.min(1, max / Math.max(im.width, im.height));
+        var c = document.createElement('canvas'); c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
+        var x = c.getContext('2d'); x.fillStyle = '#0a1530'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.82));
+      };
+      im.onerror = function () { URL.revokeObjectURL(url); rej(new Error('bad image')); };
+      im.src = url;
+    });
+  }
+  $('file').addEventListener('change', function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    $('e-img').textContent = '';
+    resize(f).then(function (d) { image = d; $('imgurl').value = ''; setThumb(); }, function () { $('e-img').textContent = 'That file could not be read as an image.'; });
+  });
+  $('imgurl').addEventListener('input', function (e) {
+    var v = e.target.value.trim();
+    if (!v) { if (!/^data:/.test(image)) image = ''; setThumb(); return; }
+    image = v; setThumb();
+  });
+
+  $('pform').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var title = $('title').value.trim(), link = $('link').value.trim(), ok = true;
+    $('f-title').classList.toggle('bad', title.length < 2);
+    $('e-title').textContent = title.length < 2 ? 'Please enter a project title.' : '';
+    if (title.length < 2) ok = false;
+    var badLink = link && !/^https?:\/\/.+\..+/i.test(link);
+    $('f-link').classList.toggle('bad', !!badLink);
+    $('e-link').textContent = badLink ? 'Enter a full address starting with https://' : '';
+    if (badLink) ok = false;
+    var imgOk = !image || safe(image, true);
+    $('e-img').textContent = imgOk ? '' : 'Image address must start with https://';
+    if (!imgOk) ok = false;
+    if (!ok) return;
+    var rec = { id: editingId || uid(), title: title, category: $('category').value.trim(), year: $('year').value.trim(), description: $('desc').value.trim(), link: link, image: image };
+    if (editingId) { projects = projects.map(function (p) { return p.id === editingId ? rec : p; }); toast('Changes saved'); }
+    else { projects.push(rec); toast('Project added'); }
+    resetForm(); persist();
+  });
+  $('cancelBtn').addEventListener('click', resetForm);
+
+  function copy(text, ok) {
+    function fb() { var t = $('json'); t.closest('details').open = true; t.focus(); t.select(); toast('Select and copy the text (Ctrl/Cmd + C)'); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { toast(ok); }, fb); else fb();
+  }
+  $('copyBtn').addEventListener('click', function () { copy(jsonText(), 'JSON copied'); });
+  $('dlBtn').addEventListener('click', function () {
+    try {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([jsonText()], { type: 'application/json' }));
+      a.download = 'projects.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      toast('projects.json downloaded');
+    } catch (e) { $('json').closest('details').open = true; toast('Download unavailable here. Use Copy JSON.'); }
+  });
+  $('resetBtn').addEventListener('click', function () {
+    if (this.dataset.arm !== '1') { this.dataset.arm = '1'; this.textContent = 'Click again to discard'; var b = this; setTimeout(function () { b.dataset.arm = ''; b.textContent = 'Discard draft'; }, 3000); return; }
+    store(null); this.dataset.arm = ''; this.textContent = 'Discard draft';
+    try { projects = JSON.parse(published).projects || []; } catch (e) { projects = []; }
+    resetForm(); render(); toast('Draft discarded');
+  });
+
+  /* Start: published file first, then any saved draft on top */
+  function start(pub) {
+    projects = pub; published = jsonText();
+    var d = load();
+    if (d) { try { var arr = JSON.parse(d); if (Array.isArray(arr)) projects = arr; } catch (e) {} }
+    render();
+  }
+  if (window.fetch) {
+    fetch('projects.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { projects: [] }; })
+      .then(function (j) { start(Array.isArray(j.projects) ? j.projects : []); }, function () { start([]); });
+  } else start([]);
+})();
+</script>
+</body>
+</html>
